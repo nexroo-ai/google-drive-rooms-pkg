@@ -69,12 +69,11 @@ def list_documents(
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json",
     }
-    timeout_s = getattr(config, "request_timeout_s", 10)
 
-    logger.debug(f"[list_documents] GET {url} params={params} timeout={timeout_s}s")
+    logger.debug(f"[list_documents] GET {url} params={params}")
 
     try:
-        resp = requests.get(url, headers=headers, params=params, timeout=timeout_s)
+        resp = requests.get(url, headers=headers, params=params)
         status = resp.status_code
 
         try:

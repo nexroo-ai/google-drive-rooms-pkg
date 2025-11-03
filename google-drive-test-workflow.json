@@ -1,0 +1,141 @@
+{
+  "addons": [
+    {
+      "id": "google-drive-1",
+      "type": "google_drive",
+      "name": "Google Drive Addon",
+      "description": "Drive actions: list / download / delete documents",
+      "enabled": true,
+      "config": {
+        "page_size": 100,
+        "max_page_size": 1000,
+        "max_download_size_mb": 50
+      },
+      "secrets": {
+        "google_drive_access_token": "ENV_GOOGLE_DRIVE_TOKEN"
+      }
+    }
+  ],
+  "entrypoints": [
+    {
+      "id": "default",
+      "name": "Google Drive Addon Test Workflow",
+      "startAt": "test-list-documents-root"
+    }
+  ],
+  "workflow": {
+    "id": "google-drive-test-workflow",
+    "name": "Google Drive Addon Test Workflow",
+    "version": "1.0.0",
+    "description": "Test workflow for Google Drive addon - tests each action independently",
+    "steps": [
+      {
+        "id": "test-list-documents-root",
+        "name": "Test List Documents in Root",
+        "action": "google-drive-1::list_documents",
+        "runLimit": 1,
+        "parameters": {
+          "folder_id": "root",
+          "include_trashed": false
+        },
+        "next": ["log-list-root-result"]
+      },
+      {
+        "id": "log-list-root-result",
+        "name": "Log List Root Result",
+        "action": "builtin::log",
+        "runLimit": 1,
+        "parameters": {
+          "message": "Listed {{test-list-documents-root.output.data.count}} files from root folder",
+          "level": "info"
+        },
+        "next": ["test-list-documents-with-trashed"]
+      },
+      {
+        "id": "test-list-documents-with-trashed",
+        "name": "Test List Documents Including Trashed",
+        "action": "google-drive-1::list_documents",
+        "runLimit": 1,
+        "parameters": {
+          "folder_id": "root",
+          "include_trashed": true
+        },
+        "next": ["log-list-trashed-result"]
+      },
+      {
+        "id": "log-list-trashed-result",
+        "name": "Log List Trashed Result",
+        "action": "builtin::log",
+        "runLimit": 1,
+        "parameters": {
+          "message": "Listed {{test-list-documents-with-trashed.output.data.count}} files including trashed items",
+          "level": "info"
+        },
+        "next": ["test-download-document"]
+      },
+      {
+        "id": "test-download-document",
+        "name": "Test Download Document",
+        "action": "google-drive-1::download_document",
+        "runLimit": 1,
+        "parameters": {
+          "fileId": "REPLACE_WITH_ACTUAL_FILE_ID"
+        },
+        "next": ["log-download-result"]
+      },
+      {
+        "id": "log-download-result",
+        "name": "Log Download Result",
+        "action": "builtin::log",
+        "runLimit": 1,
+        "parameters": {
+          "message": "Downloaded file {{test-download-document.output.data.fileId}} - Size: {{test-download-document.output.data.size_bytes}} bytes",
+          "level": "info"
+        },
+        "next": ["test-download-document-export"]
+      },
+      {
+        "id": "test-download-document-export",
+        "name": "Test Download Document with Export",
+        "action": "google-drive-1::download_document",
+        "runLimit": 1,
+        "parameters": {
+          "fileId": "REPLACE_WITH_GOOGLE_DOC_FILE_ID",
+          "export_mime_type": "application/pdf"
+        },
+        "next": ["log-download-export-result"]
+      },
+      {
+        "id": "log-download-export-result",
+        "name": "Log Download Export Result",
+        "action": "builtin::log",
+        "runLimit": 1,
+        "parameters": {
+          "message": "Exported file {{test-download-document-export.output.data.fileId}} as {{test-download-document-export.output.data.export_mime_type}} - Size: {{test-download-document-export.output.data.size_bytes}} bytes",
+          "level": "info"
+        },
+        "next": ["test-delete-document"]
+      },
+      {
+        "id": "test-delete-document",
+        "name": "Test Delete Document",
+        "action": "google-drive-1::delete_document",
+        "runLimit": 1,
+        "parameters": {
+          "fileId": "REPLACE_WITH_FILE_ID_TO_DELETE"
+        },
+        "next": ["log-delete-result"]
+      },
+      {
+        "id": "log-delete-result",
+        "name": "Log Delete Result",
+        "action": "builtin::log",
+        "runLimit": 1,
+        "parameters": {
+          "message": "Deleted file {{test-delete-document.output.data.file.id}} ({{test-delete-document.output.data.file.name}}) - Trashed: {{test-delete-document.output.data.trashed}}",
+          "level": "info"
+        }
+      }
+    ]
+  }
+}

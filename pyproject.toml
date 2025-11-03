@@ -24,6 +24,7 @@ requires-python = ">=3.9"
 dependencies = [
     "loguru>=0.7.0",
     "pydantic>=2.0.0",
+    "requests>=2.31.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -48,8 +49,8 @@ pytest-mock = "^3.14.1"
 pytest-asyncio = "^1.1.0"
 
 [project.urls]
-Homepage = "https://github.com/synvex/google-calendars-rooms-pkg"
-Repository = "https://github.com/synvex/google-calendars-rooms-pkg"
+Homepage = "https://github.com/synvex/google-drive-rooms-pkg"
+Repository = "https://github.com/synvex/google-drive-rooms-pkg"
 
 [tool.ruff]
 target-version = "py39"
@@ -91,7 +92,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["src/google_calendars_rooms_pkg"]
+source = ["src/google_drive_rooms_pkg"]
 omit = [
     "*/tests/*",
     "*/__pycache__/*",

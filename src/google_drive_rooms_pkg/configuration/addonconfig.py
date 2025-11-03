@@ -11,6 +11,7 @@ class CustomAddonConfig(BaseAddonConfig):
 
     page_size: int = Field(100, description="Taille de page par défaut")
     max_page_size: int = Field(1000, description="Taille de page maximale autorisée")
+    max_download_size_mb: int = Field(50, description="Taille maximale de téléchargement en MB")
 
     @classmethod
     def get_required_secrets(cls) -> CustomRequiredSecrets:

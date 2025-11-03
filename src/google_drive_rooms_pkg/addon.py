@@ -6,6 +6,7 @@ from .services.credentials import CredentialsRegistry
 from .tools.base import ToolRegistry
 from .actions.list_documents import list_documents
 from .actions.delete_documents import delete_document
+from .actions.download_document import download_document
 
 class GoogleDriveRoomsAddon:
     """
@@ -70,6 +71,8 @@ class GoogleDriveRoomsAddon:
     def delete_document(self, fileId: str = None) -> dict:
         return delete_document(self.config, fileId=fileId)
 
+    def download_document(self, fileId: str, export_mime_type: str = None) -> dict:
+        return download_document(self.config, fileId=fileId, export_mime_type=export_mime_type)
 
     def test(self) -> bool:
         """

@@ -71,12 +71,11 @@ def delete_document(
         "Content-Type": "application/json",
     }
     body = {"trashed": True}
-    timeout_s = getattr(config, "request_timeout_s", 10)
 
-    logger.debug(f"[delete_document] PATCH {url} body={body} timeout={timeout_s}s")
+    logger.debug(f"[delete_document] PATCH {url} body={body}")
 
     try:
-        resp = requests.patch(url, headers=headers, params=params, json=body, timeout=timeout_s)
+        resp = requests.patch(url, headers=headers, params=params, json=body)
         status = resp.status_code
 
         try:
