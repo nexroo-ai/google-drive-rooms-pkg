@@ -1,7 +1,7 @@
-from typing import Annotated
-from pydantic import Field, model_validator, ConfigDict
+from pydantic import ConfigDict, Field, model_validator
 
 from .baseconfig import BaseAddonConfig, RequiredSecretsBase
+
 
 class CustomRequiredSecrets(RequiredSecretsBase):
     google_drive_access_token: str = Field(..., description="Google Drive API access token environment variable name (key name expected in `secrets`).")

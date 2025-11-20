@@ -1,8 +1,7 @@
 import pytest
 from pydantic import ValidationError
-
-from template_rooms_pkg.configuration.addonconfig import CustomAddonConfig
-from template_rooms_pkg.configuration.baseconfig import BaseAddonConfig
+from google_drive_rooms_pkg.configuration.addonconfig import CustomAddonConfig
+from google_drive_rooms_pkg.configuration.baseconfig import BaseAddonConfig
 
 
 class TestBaseAddonConfig:

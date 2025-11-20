@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import base64
-from typing import Any, Dict, Optional
-from pydantic import BaseModel, Field
-from loguru import logger
+from typing import Any
+
 import requests
+from loguru import logger
+from pydantic import BaseModel, Field
 
 from ..configuration.addonconfig import CustomAddonConfig
 from .base import ActionResponse, OutputBase, TokensSchema
@@ -12,17 +13,17 @@ from .base import ActionResponse, OutputBase, TokensSchema
 
 class ActionInput(BaseModel):
     fileId: str = Field(..., description="ID du fichier à télécharger.")
-    export_mime_type: Optional[str] = Field(None, description="Type MIME pour l'export (Google Docs, Sheets, etc.).")
+    export_mime_type: str | None = Field(None, description="Type MIME pour l'export (Google Docs, Sheets, etc.).")
 
 
 class ActionOutput(OutputBase):
-    data: Optional[Dict[str, Any]] = None
+    data: dict[str, Any] | None = None
 
 
 def download_document(
     config: CustomAddonConfig,
     fileId: str,
-    export_mime_type: Optional[str] = None,
+    export_mime_type: str | None = None,
 ) -> ActionResponse:
     tokens = TokensSchema(stepAmount=150, totalCurrentAmount=150)
     logger.debug("[download_document] called")

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
-from pydantic import BaseModel, Field
-from loguru import logger
+from typing import Any
+
 import requests
+from loguru import logger
+from pydantic import BaseModel, Field
 
 from ..configuration.addonconfig import CustomAddonConfig
 from .base import ActionResponse, OutputBase, TokensSchema
@@ -17,7 +18,7 @@ class ActionInput(BaseModel):
 
 
 class ActionOutput(OutputBase):
-    data: Optional[Dict[str, Any]] = None
+    data: dict[str, Any] | None = None
 
 
 def delete_document(

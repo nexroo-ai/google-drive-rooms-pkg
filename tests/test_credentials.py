@@ -1,8 +1,7 @@
 from unittest.mock import patch
 
 import pytest
-
-from template_rooms_pkg.services.credentials import CredentialsRegistry
+from google_drive_rooms_pkg.services.credentials import CredentialsRegistry
 
 
 class TestCredentialsRegistry:

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
-from pydantic import BaseModel, Field
-from loguru import logger
+from typing import Any
+
 import requests
+from loguru import logger
+from pydantic import BaseModel, Field
 
 from ..configuration.addonconfig import CustomAddonConfig
 from .base import ActionResponse, OutputBase, TokensSchema
@@ -11,14 +12,14 @@ from .base import ActionResponse, OutputBase, TokensSchema
 
 class ActionInput(BaseModel):
     """
-    Paramètres pour lister les documents d’un dossier Google Drive.
+    Paramètres pour lister les documents d'un dossier Google Drive.
     """
     folder_id: str = Field("root", description="Dossier cible (root par défaut).")
     include_trashed: bool = Field(False, description="Inclure les fichiers de la corbeille.")
 
 
 class ActionOutput(OutputBase):
-    data: Optional[Dict[str, Any]] = None
+    data: dict[str, Any] | None = None
 
 
 def list_documents(

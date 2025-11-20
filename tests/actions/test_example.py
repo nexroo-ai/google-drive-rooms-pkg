@@ -1,9 +1,8 @@
 from unittest.mock import Mock, patch
 
 import pytest
-
-from template_rooms_pkg.actions.base import ActionResponse
-from template_rooms_pkg.actions.example import example
+from google_drive_rooms_pkg.actions.base import ActionResponse
+from google_drive_rooms_pkg.actions.example import example
 
 
 class TestExampleAction:
