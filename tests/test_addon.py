@@ -9,7 +9,7 @@ class TestGoogleDriveRoomsAddon:
     def test_addon_initialization(self):
         addon = GoogleDriveRoomsAddon()
 
-        assert addon.type == "Unknown"
+        assert addon.type == "cloud_storage"
         assert addon.modules == ["actions", "configuration", "memory", "services", "storage", "tools", "utils"]
         assert addon.config == {}
         assert addon.credentials is not None
@@ -25,7 +25,7 @@ class TestGoogleDriveRoomsAddon:
         assert hasattr(logger, 'info')
         assert hasattr(logger, 'warning')
         assert hasattr(logger, 'error')
-        assert logger.addon_type == "Unknown"
+        assert logger.addon_type == "cloud_storage"
 
 
     def test_load_tools(self, sample_tools, sample_tool_descriptions):
@@ -65,14 +65,30 @@ class TestGoogleDriveRoomsAddon:
         assert addon.observer_callback == callback
         assert addon.addon_id == addon_id
 
-    def test_example_action(self):
+    def test_download_document_action(self):
         addon = GoogleDriveRoomsAddon()
 
-        result = addon.example("param1_value", "param2_value")
+        from google_drive_rooms_pkg.configuration import CustomAddonConfig
 
-        assert result.message == "Action executed successfully"
-        assert result.code == 200
-        assert result.output.data["processed"] == "param1_value- processed -"
+        test_config = CustomAddonConfig(
+            id="test-drive",
+            type="google_drive",
+            name="Test Drive",
+            description="Test Google Drive addon",
+            secrets={"google_drive_access_token": "fake_token"}
+        )
+        addon.config = test_config
+
+        with patch('google_drive_rooms_pkg.actions.download_document.requests.get') as mock_get:
+            mock_get.return_value.status_code = 401
+            mock_get.return_value.json.return_value = {"error": {"message": "Invalid token"}}
+
+            result = addon.download_document(fileId="test_file_id")
+
+            from google_drive_rooms_pkg.actions.base import ActionResponse
+            assert isinstance(result, ActionResponse)
+            assert result.code == 401
+            assert result.message == "Invalid token"
 
     def test_load_addon_config_success(self, sample_config):
         addon = GoogleDriveRoomsAddon()

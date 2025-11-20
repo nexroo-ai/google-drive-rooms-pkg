@@ -16,7 +16,7 @@ class GoogleDriveRoomsAddon:
     This class provides access to all Google Drive rooms package functionality
     and can be instantiated by external programs using this package.
     """
-    type = "google_drive"
+    type = "cloud_storage"
 
     def __init__(self):
         self.modules = ["actions", "configuration", "memory", "services", "storage", "tools", "utils"]

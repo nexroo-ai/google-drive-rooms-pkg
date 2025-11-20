@@ -38,71 +38,61 @@ class TestBaseAddonConfig:
 class TestCustomAddonConfig:
     def test_custom_config_creation_success(self):
         config = CustomAddonConfig(
-            id="test_db_addon_id",
-            name="test_db_addon",
-            description="Test database addon",
-            host="localhost",
-            database="testdb",
-            secrets={"db_password": "secret", "db_user": "user"}
+            id="test_drive_addon_id",
+            type="google_drive",
+            name="test_drive_addon",
+            description="Test Google Drive addon",
+            page_size=50,
+            max_page_size=500,
+            max_download_size_mb=25,
+            secrets={"google_drive_access_token": "test_token"}
         )
 
-        assert config.id == "test_db_addon_id"
-        assert config.name == "test_db_addon"
-        assert config.type == "database"
-        assert config.host == "localhost"
-        assert config.database == "testdb"
-        assert config.port == 5432
+        assert config.id == "test_drive_addon_id"
+        assert config.name == "test_drive_addon"
+        assert config.type == "google_drive"
+        assert config.page_size == 50
+        assert config.max_page_size == 500
+        assert config.max_download_size_mb == 25
 
-    def test_custom_config_with_custom_port(self):
+    def test_custom_config_with_defaults(self):
         config = CustomAddonConfig(
-            id="test_db_addon_id",
-            name="test_db_addon",
-            description="Test database addon",
-            host="localhost",
-            database="testdb",
-            port=3306,
-            secrets={"db_password": "secret", "db_user": "user"}
+            id="test_drive_addon_id",
+            type="google_drive",
+            name="test_drive_addon",
+            description="Test Google Drive addon",
+            secrets={"google_drive_access_token": "test_token"}
         )
 
-        assert config.port == 3306
+        assert config.page_size == 100
+        assert config.max_page_size == 1000
+        assert config.max_download_size_mb == 50
 
-    def test_custom_config_missing_db_password(self):
-        with pytest.raises(ValidationError, match="Missing database secrets"):
+    def test_custom_config_missing_access_token(self):
+        with pytest.raises(ValidationError, match="Missing Google Drive secrets"):
             CustomAddonConfig(
-                id="test_db_addon_id",
-                name="test_db_addon",
-                description="Test database addon",
-                host="localhost",
-                database="testdb",
-                secrets={"db_user": "user"}
-            )
-
-    def test_custom_config_missing_db_user(self):
-        with pytest.raises(ValidationError, match="Missing database secrets"):
-            CustomAddonConfig(
-                id="test_db_addon_id",
-                name="test_db_addon",
-                description="Test database addon",
-                host="localhost",
-                database="testdb",
-                secrets={"db_password": "secret"}
-            )
-
-    def test_custom_config_missing_both_secrets(self):
-        with pytest.raises(ValidationError, match="Missing database secrets"):
-            CustomAddonConfig(
-                id="test_db_addon_id",
-                name="test_db_addon",
-                description="Test database addon",
-                host="localhost",
-                database="testdb",
+                id="test_drive_addon_id",
+                type="google_drive",
+                name="test_drive_addon",
+                description="Test Google Drive addon",
                 secrets={}
+            )
+
+    def test_custom_config_with_wrong_secret_key(self):
+        with pytest.raises(ValidationError, match="Missing Google Drive secrets"):
+            CustomAddonConfig(
+                id="test_drive_addon_id",
+                type="google_drive",
+                name="test_drive_addon",
+                description="Test Google Drive addon",
+                secrets={"wrong_key": "value"}
             )
 
     def test_custom_config_missing_required_fields(self):
         with pytest.raises(ValidationError):
             CustomAddonConfig(
                 id="test_db_addon_id",
+            type="google_drive",
                 name="test_db_addon",
                 description="Test database addon",
                 secrets={"db_password": "secret", "db_user": "user"}
