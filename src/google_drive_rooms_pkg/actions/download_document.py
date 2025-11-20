@@ -121,14 +121,19 @@ def download_document(
             code=503,
         )
 
-    if export_mime_type:
+    is_google_docs_file = file_mime_type.startswith("application/vnd.google-apps.")
+
+    if is_google_docs_file:
         url = f"https://www.googleapis.com/drive/v3/files/{fileId}/export"
-        params = {"mimeType": export_mime_type}
-        logger.debug(f"[download_document] Exporting file {fileId} as {export_mime_type}")
+        export_type = export_mime_type or "text/plain"
+        params = {"mimeType": export_type}
+        logger.debug(f"[download_document] Exporting Google Docs file {fileId} as {export_type}")
     else:
         url = f"https://www.googleapis.com/drive/v3/files/{fileId}"
         params = {"alt": "media"}
-        logger.debug(f"[download_document] Downloading file {fileId}")
+        if export_mime_type:
+            logger.warning(f"[download_document] Ignoring export_mime_type for native file {file_mime_type}")
+        logger.debug(f"[download_document] Downloading native file {fileId}")
 
     logger.debug(f"[download_document] GET {url} params={params}")
 
