@@ -1,5 +1,6 @@
 import pytest
 from pydantic import ValidationError
+
 from google_drive_rooms_pkg.configuration.addonconfig import CustomAddonConfig
 from google_drive_rooms_pkg.configuration.baseconfig import BaseAddonConfig
 

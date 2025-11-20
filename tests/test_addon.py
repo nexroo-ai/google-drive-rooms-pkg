@@ -1,6 +1,7 @@
 from unittest.mock import Mock, patch
 
 import pytest
+
 from google_drive_rooms_pkg.addon import GoogleDriveRoomsAddon
 
 
